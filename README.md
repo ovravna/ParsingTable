@@ -22,6 +22,15 @@ Valid options are:
 plain simple github grid fancy_grid pipe orgtbl jira presto psql rst
 mediawiki moinmoin youtrack html latex latex_raw latex_booktabs textile
 
+Run after installing requirements:
+```
+$ python parsing_table.py grammar.txt 
+```
+Run executable on Linux:
+```
+$ ./parsing_table grammar.txt
+```
+
 Result:
 ```
 ╒═════════════╤══════════╤═══════════╤═══════════╤══════════╤════════╤════════╤═════════╤════════════╕
