@@ -238,18 +238,22 @@ Any non-nonterminal on the rightside of -> is a terminal
         elif os.path.isfile(arg):
             with open(arg, "r") as file:
                 G, N = grammar(file.read())
+                if len(G) == 0:
+                    print("Invalid grammar in file.")
+                    exit(-1)
         elif re.match(grammar_pattern, arg):
             G, N = grammar(arg)
-        
+        else:
+            print("No grammar was found.")
+            exit(-1)
         
         
         if l >= 3:
             if sys.argv[2] in fmts:
                 fmt = sys.argv[2]
             else:
-                print("Invalid table style: %s\nSee --help for valid options" % arg)
-            
-        
+                print("Invalid table style: %s\nTry without style option or see --help for valid options" % arg)
+                exit(-1)   
     else:
         print("""
 No recognized grammar!
@@ -258,10 +262,12 @@ For more info see --help
 Example parse table:""")
         G, N = grammar(g)
         
+
     try:
         table = as_table(G, N, tablefmt=fmt)
         print(table)
     except RecursionError:
         print("Left recursive grammar!")
+    
 
     
