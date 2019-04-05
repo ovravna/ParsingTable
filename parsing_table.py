@@ -203,7 +203,10 @@ def as_table(G, N, M = None, first = None, follow = None, **kwargs):
 
 if __name__ == "__main__":
     l = len(sys.argv) 
-    fmts = ["plain" , "simple" , "github" , "grid" , "fancy_grid" , "pipe" , "orgtbl" , "jira" , "presto" , "psql" , "rst" , "mediawiki" , "moinmoin" , "youtrack" , "html" , "latex" , "latex_raw" , "latex_booktabs" , "textile"]
+    fmt = 'fancy_grid'
+    fmts = ["plain" , "simple" , "github" , "grid" , "fancy_grid" , "pipe" , "orgtbl" , 
+            "jira" , "presto" , "psql" , "rst" , "mediawiki" , "moinmoin" , "youtrack" , 
+            "html" , "latex" , "latex_raw" , "latex_booktabs" , "textile"]
         
     g = """
         E -> T E'
@@ -238,7 +241,7 @@ Any non-nonterminal on the rightside of -> is a terminal
             G, N = grammar(arg)
         
         
-        fmt = 'fancy_grid'
+        
         if l >= 3:
             if sys.argv[2] in fmts:
                 fmt = sys.argv[2]
@@ -254,6 +257,7 @@ For more info see --help
 Example parse table:""")
         G, N = grammar(g)
         
-    table = as_table(G, N, tablefmt='fancy_grid')
+        
+    table = as_table(G, N, tablefmt=fmt)
 
     print(table)
