@@ -10,7 +10,8 @@ Like this:
         T' -> * F T' | €
         F -> ( E ) | id
 
-`€` is empty terminal
+`€` is empty terminal.
+
 Use space `' '` as seperator in production
 Seperate productions with pipe `'|'` or with different arrow-productions
 Any string on the left side of `->` is a nonterminal
