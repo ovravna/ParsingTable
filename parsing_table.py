@@ -97,27 +97,35 @@ def follow_set(G, S, first = None):
             
             for i, x in enumerate(X):
                 if  not isinstance(x, str): 
-                    n = [first.get(y, {y}) for y in X[i+1:]]        
-                        
-                    for y in n:
-                   
-                        for y_ in y:
-                          
-                            if y_ != '':
-                                add(x, y_)
-                        if '' not in y:
-                            
-                            break
-                    
-                    if len(n) == 0 or '' in n[0]:
-                        for a in follow.get(A, {}):
-                                    add(x, a)
+                    fst = []        
 
-    for k in G:
-        f(k)
-    for k in G:
+                    for y in X[i+1:]:
+                        m = first.get(y, {y}) 
+                        fst += m
+                        if '' not in m:
+                            break
+
+                    for y in fst:           
+                        if y != '':        
+                            add(x, y)
+                      
+                    
+                    if len(fst) == 0 or '' in fst:
+                        for a in follow.get(A, {}):
+                            add(x, a)
+                                    
+    h = lambda f: hash(tuple(n for v in f.values() for n in v))
+    f_old = h(follow)
     
-        f(k)
+    while True:
+        
+        for k in G:
+            f(k)
+        if f_old == h(follow):
+            break
+        else:
+            f_old = h(follow)
+    
     return follow
 
 def parse_table(G, first = None, follow = None):
