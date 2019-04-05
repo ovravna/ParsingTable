@@ -169,13 +169,15 @@ def as_table(G, N, M = None, first = None, follow = None, **kwargs):
 
     nonterminals = set(v for v in follow.keys())
 
+
     M = M or parse_table(G, first, follow)
     s = lambda s: s if s != '' else 'ε'
 
 
     z = sorted(list(terminals))
     z.reverse()
-    z[4], z[3] = z[3], z[4]
+    if len(z) > 4:
+        z[4], z[3] = z[3], z[4]
     data = []
     for n in nonterminals:
         
@@ -256,7 +258,10 @@ For more info see --help
 Example parse table:""")
         G, N = grammar(g)
         
-        
-    table = as_table(G, N, tablefmt=fmt)
+    try:
+        table = as_table(G, N, tablefmt=fmt)
+        print(table)
+    except RecursionError:
+        print("Left recursive grammar!")
 
-    print(table)
+    
