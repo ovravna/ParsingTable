@@ -1,5 +1,4 @@
 from tabulate import tabulate
-from enum import Enum
 import re
 from collections import OrderedDict
 import sys
