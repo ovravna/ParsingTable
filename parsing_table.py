@@ -5,9 +5,14 @@ import sys
 import os
 
 grammar_pattern = re.compile(r"(.+?)[=-]>\|?(.+)")
+END = '$'
+EMPTY = ''
+EMPTY_IN = '€'
+EMPTY_OUT = 'ε'
+OR = '|'
+AND = ' '
 
 def grammar(g):
-    
     
     G = OrderedDict()
     def add(k, v):
@@ -20,19 +25,15 @@ def grammar(g):
         t = t.strip()
         
         
-        s2 = [s.strip().split(" ") for s in s2.split("|")]
+        s2 = [s.strip().split(AND) for s in s2.split(OR)]
         add(t, s2)
         
     K = list(G.keys())
     for i in range(len(K)):
         G[i] = G[K[i]]
         del G[K[i]]
-
- 
     
-        
-    
-    mp = lambda s: K.index(s) if s in K else s if s != '€' else ''
+    mp = lambda s: K.index(s) if s in K else s if s != EMPTY_IN else EMPTY
     for k in G: 
         
         G[k] = [[mp(s) for s in n] for n in G[k]]
@@ -59,7 +60,7 @@ def first_set(G):
                 if  isinstance(x, str):                  
                     add(x, x)
                     r.insert(0, x)
-                    if x == '':                     
+                    if x == EMPTY:                     
                         add(k, x)
                         
                     else:                        
@@ -67,7 +68,7 @@ def first_set(G):
                 else:
                     Z = f(x)
                 
-                    for x__ in {Z[i] for i in range(Z.index('') if '' in Z else len(Z))}:
+                    for x__ in {Z[i] for i in range(Z.index(EMPTY) if EMPTY in Z else len(Z))}:
                         r.insert(0, x__)
                         add(k, x__)
            
@@ -102,19 +103,19 @@ def follow_set(G, S, first = None):
                     for y in X[i+1:]:
                         m = first.get(y, {y}) 
                         fst += m
-                        if '' not in m:
+                        if EMPTY not in m:
                             break
 
                     for y in fst:           
-                        if y != '':        
+                        if y != EMPTY:        
                             add(x, y)
-                      
+                        
                     
-                    if len(fst) == 0 or '' in fst:
+                    if len(fst) == 0 or EMPTY in fst:
                         for a in follow.get(A, {}):
                             add(x, a)
                                     
-    h = lambda f: hash(tuple(n for v in f.values() for n in v))
+    h = lambda f: hash(n for v in f.values() for n in v)
     f_old = h(follow)
     
     while True:
@@ -145,10 +146,10 @@ def parse_table(G, first = None, follow = None):
         for x in a: 
             f = first[x]
             frs = frs.union(f)
-            if '' not in f:
+            if EMPTY not in f:
                 break
         
-        return frs - {''}
+        return frs - {EMPTY}
     def P(A):
         for i, X in enumerate(G[A]):
             for a in frst(X):
@@ -157,7 +158,7 @@ def parse_table(G, first = None, follow = None):
 
                 if isinstance(x, str):                  
 
-                    if x == '':  
+                    if x == EMPTY:  
                         for b in follow[A]:                   
                             add(A, b, A, i)
                         
@@ -173,13 +174,13 @@ def as_table(G, N, M = None, first = None, follow = None, **kwargs):
     first = first or first_set(G)
     follow = follow or follow_set(G, 0, first)
     terminals = set(n for v in first.values()  for n in v).union(set(n for v in follow.values()  for n in v))
-    terminals -= {''}
+    terminals -= {EMPTY}
 
     nonterminals = set(v for v in follow.keys())
 
 
     M = M or parse_table(G, first, follow)
-    s = lambda s: s if s != '' else 'ε'
+    s = lambda s: s if s != EMPTY else EMPTY_OUT
 
 
     z = sorted(list(terminals))
